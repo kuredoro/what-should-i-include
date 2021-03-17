@@ -15,46 +15,28 @@ func assertString(t *testing.T, got, want string) {
 }
 
 func TestScanLine(t *testing.T) {
-    t.Run("empty line", func(t *testing.T) {
-        line := ""
 
-        got := wsii.ScanLine(line)
+    cases := []struct{
+        title string
+        input string
+        want string
+    }{
+        {"empty line", "", ""},
+        {"one double-quote include", "#include \"test\"", "test"},
+        {"one angle-bracket include",  "#include <foo>", "foo"},
+        {"string literal definition",  "const char * foo = \"bar\"", ""},
+        {"an ambiguous if statement",  "if (0 < a && b > 0)", ""},
+        {"space-idented",  "    #include <hello>", "hello"},
+        {"tab-idented",  "\t#include <hello>", "hello"},
+    }
 
-        assertString(t, got, "")
-    })
+    for _, test := range cases {
+        t.Run(test.title, func(t *testing.T) {
+            got := wsii.ScanLine(test.input)
 
-    t.Run("one double-quote include", func(t *testing.T) {
-        line := "#include \"test\""
+            assertString(t, got, test.want)
 
-        got := wsii.ScanLine(line)
-        want := "test"
-
-        assertString(t, got, want)
-    })
-
-    t.Run("string literal definition", func (t *testing.T) {
-        line := "const char * foo = \"bar\""
-
-        got := wsii.ScanLine(line)
-
-        assertString(t, got, "")
-    })
-
-    t.Run("an ambiguous if statement", func (t *testing.T) {
-        line := "if (0 < a && b > 0)"
-
-        got := wsii.ScanLine(line)
-
-        assertString(t, got, "")
-    })
-
-    t.Run("one angle-bracket include", func(t *testing.T) {
-        line := "#include <foo>"
-
-        got := wsii.ScanLine(line)
-        want := "foo"
-
-        assertString(t, got, want)
-    })
+        })
+    }
 }
 
