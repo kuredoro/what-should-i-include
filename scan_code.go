@@ -1,6 +1,9 @@
 package wsii
 
-import "strings"
+import (
+	"bufio"
+	"strings"
+)
 
 func ScanLine(line string) string {
     line = strings.TrimSpace(line)
@@ -24,4 +27,21 @@ func ScanLine(line string) string {
     }
 
     return ""
+}
+
+func ScanCode(code string) []string {
+    var headers []string
+
+    buf := strings.NewReader(code)
+    s := bufio.NewScanner(buf)
+
+    for s.Scan() {
+        header := ScanLine(s.Text())
+
+        if header != "" {
+            headers = append(headers, header)
+        }
+    }
+
+    return headers
 }
