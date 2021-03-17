@@ -1,7 +1,6 @@
 package wsii_test
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/kuredoro/what-should-i-include"
@@ -13,9 +12,7 @@ func TestScanCode(t *testing.T) {
 
         got := wsii.ScanCode(code)
 
-        if got != nil {
-            t.Errorf("got includes %v, want none", got)
-        }
+        wsii.AssertIncludes(t, got, nil)
     })
 
     t.Run("one double-quote include", func(t *testing.T) {
@@ -24,8 +21,17 @@ func TestScanCode(t *testing.T) {
         got := wsii.ScanCode(code)
         want := []string{"test"}
 
-        if !reflect.DeepEqual(got, want) {
-            t.Errorf("got includes %v, want %v", got, want)
-        }
+        wsii.AssertIncludes(t, got, want)
     })
+
+    /*
+    t.Run("one angle-bracket include", func(t *testing.T) {
+        code := "#include <foo>"
+
+        got := wsii.ScanCode(code)
+        want := []string{"foo"}
+
+        wsii.AssertIncludes(t, got, want)
+    })
+    */
 }
