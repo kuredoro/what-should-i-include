@@ -2,8 +2,9 @@ package wsii
 
 import "strings"
 
-
 func ScanLine(line string) string {
+    line = strings.TrimSpace(line)
+
     if !strings.HasPrefix(line, "#include") {
         return ""
     }
