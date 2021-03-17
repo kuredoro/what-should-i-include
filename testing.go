@@ -40,3 +40,11 @@ func AssertIncludes(t *testing.T, got, want []string) {
         }
     }
 }
+
+func assertString(t *testing.T, got, want string) {
+    t.Helper()
+
+    if got != want {
+        t.Errorf("got string %q, want %q", got, want)
+    }
+}

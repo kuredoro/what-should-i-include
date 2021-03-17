@@ -4,14 +4,6 @@ import (
     "testing"
 )
 
-func assertString(t *testing.T, got, want string) {
-    t.Helper()
-
-    if got != want {
-        t.Errorf("got string %q, want %q", got, want)
-    }
-}
-
 func TestSubstrEnclosedBy(t *testing.T) {
     t.Run("empty", func(t *testing.T) {
         got := substrEnclosedBy("", '(', ')')

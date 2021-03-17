@@ -1,21 +1,26 @@
 package wsii
 
-import (
-    "strings"
-)
+import "strings"
 
-func ScanCode(code string) []string {
-    parts := strings.Split(code, "\"")
 
-    if code != "" && len(parts) == 1 {
-        head := strings.Split(code, "<")
-        parts = head[:1]
-        parts = append(parts, strings.Split(head[1], ">")...)
+func ScanLine(line string) string {
+    if !strings.HasPrefix(line, "#include") {
+        return ""
     }
 
-    if len(parts) == 3 {
-        return []string{parts[1]}
+    line = line[len("#include"):]
+
+    quoted := substrEnclosedBy(line, '"', '"')
+
+    if quoted != line {
+        return quoted
     }
 
-    return nil
+    angled := substrEnclosedBy(line, '<', '>')
+
+    if angled != line {
+        return angled
+    }
+
+    return ""
 }

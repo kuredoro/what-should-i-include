@@ -6,30 +6,55 @@ import (
 	"github.com/kuredoro/what-should-i-include"
 )
 
-func TestScanCode(t *testing.T) {
-    t.Run("empty code", func(t *testing.T) {
-        code := ""
+func assertString(t *testing.T, got, want string) {
+    t.Helper()
 
-        got := wsii.ScanCode(code)
+    if got != want {
+        t.Errorf("got string %q, want %q", got, want)
+    }
+}
 
-        wsii.AssertIncludes(t, got, nil)
+func TestScanLine(t *testing.T) {
+    t.Run("empty line", func(t *testing.T) {
+        line := ""
+
+        got := wsii.ScanLine(line)
+
+        assertString(t, got, "")
     })
 
     t.Run("one double-quote include", func(t *testing.T) {
-        code := "#include \"test\""
+        line := "#include \"test\""
 
-        got := wsii.ScanCode(code)
-        want := []string{"test"}
+        got := wsii.ScanLine(line)
+        want := "test"
 
-        wsii.AssertIncludes(t, got, want)
+        assertString(t, got, want)
+    })
+
+    t.Run("string literal definition", func (t *testing.T) {
+        line := "const char * foo = \"bar\""
+
+        got := wsii.ScanLine(line)
+
+        assertString(t, got, "")
+    })
+
+    t.Run("an ambiguous if statement", func (t *testing.T) {
+        line := "if (0 < a && b > 0)"
+
+        got := wsii.ScanLine(line)
+
+        assertString(t, got, "")
     })
 
     t.Run("one angle-bracket include", func(t *testing.T) {
-        code := "#include <foo>"
+        line := "#include <foo>"
 
-        got := wsii.ScanCode(code)
-        want := []string{"foo"}
+        got := wsii.ScanLine(line)
+        want := "foo"
 
-        wsii.AssertIncludes(t, got, want)
+        assertString(t, got, want)
     })
 }
+
