@@ -2,6 +2,7 @@ package wsii
 
 import (
 	"bufio"
+	"path/filepath"
 	"strings"
 )
 
@@ -17,13 +18,13 @@ func ScanLine(line string) string {
     quoted := substrEnclosedBy(line, '"', '"')
 
     if quoted != line {
-        return quoted
+        return filepath.Clean(quoted)
     }
 
     angled := substrEnclosedBy(line, '<', '>')
 
     if angled != line {
-        return angled
+        return filepath.Clean(angled)
     }
 
     return ""

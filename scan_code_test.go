@@ -1,6 +1,7 @@
 package wsii_test
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/kuredoro/what-should-i-include"
@@ -27,14 +28,20 @@ func TestScanLine(t *testing.T) {
         {"string literal definition",  "const char * foo = \"bar\"", ""},
         {"an ambiguous if statement",  "if (0 < a && b > 0)", ""},
         {"space-idented",  "    #include <hello>", "hello"},
-        {"tab-idented",  "\t#include <hello>", "hello"},
+        {"tab-idented",  "\t#include <hello/waai.h>", "hello/waai.h"},
+        {"windows style",  "#include <its\\ok.hpp>", "its\\ok.hpp"},
     }
 
     for _, test := range cases {
         t.Run(test.title, func(t *testing.T) {
             got := wsii.ScanLine(test.input)
 
-            assertString(t, got, test.want)
+            want := ""
+            if test.want != "" {
+                want = filepath.Clean(test.want)
+            }
+
+            assertString(t, got, want)
 
         })
     }
