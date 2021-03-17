@@ -24,7 +24,6 @@ func TestScanCode(t *testing.T) {
         wsii.AssertIncludes(t, got, want)
     })
 
-    /*
     t.Run("one angle-bracket include", func(t *testing.T) {
         code := "#include <foo>"
 
@@ -33,5 +32,4 @@ func TestScanCode(t *testing.T) {
 
         wsii.AssertIncludes(t, got, want)
     })
-    */
 }
